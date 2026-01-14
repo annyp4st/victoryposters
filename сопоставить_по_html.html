@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Автосопоставление имён файлов (как на сайте) — Выставка</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 12px;
+      }
+      textarea.input {
+        min-height: 220px;
+        resize: vertical;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      .ok {
+        color: rgba(247, 210, 106, 0.95);
+      }
+      .bad {
+        color: rgba(255, 99, 99, 0.95);
+      }
+      .pill {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(0, 0, 0, 0.18);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Автосопоставление имён файлов “как на сайте”</h1>
+        <p class="sub">
+          Вставь сюда HTML‑код страницы выставки (исходный код / “View page source”). Я автоматически найду имена файлов
+          картинок вида <code>ne-boltay-597x850.jpg</code> и сопоставлю их с нашими названиями плакатов.
+        </p>
+        <p class="small">
+          Источник: <a href="https://old.nlrs.ru/exhibitions/plakaty-voyny/" target="_blank" rel="noreferrer">виртуальная выставка НБ РС(Я)</a>
+        </p>
+      </header>
+
+      <section class="card">
+        <div class="row">
+          <label class="label" for="htmlInput">HTML‑код:</label>
+        </div>
+        <input id="fileInput" type="file" accept=".txt,.html,.htm" style="display: none" />
+        <textarea id="htmlInput" class="input" placeholder="Вставь сюда весь HTML (можно очень большой)…"></textarea>
+        <div class="row" style="margin-top: 10px">
+          <button id="loadFileBtn" class="btn btnGhost" type="button">Загрузить файл…</button>
+          <button id="matchBtn" class="btn btnGhost" type="button">Сопоставить</button>
+          <button id="importBtn" class="btn btnGhost" type="button" disabled>Импортировать в выставку</button>
+          <button id="copyBtn" class="btn btnGhost" type="button" disabled>Скопировать JSON</button>
+          <a class="btn btnGhost" href="./index.html" style="text-decoration: none">← назад к выставке</a>
+        </div>
+        <div class="small" id="status" style="margin-top: 10px"></div>
+      </section>
+
+      <section class="card">
+        <h2 style="margin: 0 0 8px; font-size: 18px">Результат (JSON привязок)</h2>
+        <pre id="out" class="mono" style="white-space: pre-wrap; margin: 0"></pre>
+      </section>
+    </main>
+
+    <script src="./exhibit-data.js"></script>
+    <script>
+      const LS_KEY = "posterFileOverrides_v1";
+      const years = [1941, 1942, 1943, 1944, 1945];
+
+      function normalizeRu(s) {
+        return String(s ?? "")
+          .toLowerCase()
+          .replaceAll("ё", "е")
+          .replaceAll(/[«»“”\"']/g, "")
+          .replaceAll(/[\s\u00A0]+/g, " ")
+          .trim();
+      }
+
+      // Транслитерация (как в выставке), но без добавления года.
+      function translitRuToLat(s) {
+        const map = {
+          а: "a",
+          б: "b",
+          в: "v",
+          г: "g",
+          д: "d",
+          е: "e",
+          ё: "e",
+          ж: "zh",
+          з: "z",
+          и: "i",
+          й: "y",
+          к: "k",
+          л: "l",
+          м: "m",
+          н: "n",
+          о: "o",
+          п: "p",
+          р: "r",
+          с: "s",
+          т: "t",
+          у: "u",
+          ф: "f",
+          х: "h",
+          ц: "ts",
+          ч: "ch",
+          ш: "sh",
+          щ: "sch",
+          ъ: "",
+          ы: "y",
+          ь: "",
+          э: "e",
+          ю: "yu",
+          я: "ya",
+        };
+        return String(s ?? "")
+          .toLowerCase()
+          .split("")
+          .map((ch) => (map[ch] != null ? map[ch] : ch))
+          .join("");
+      }
+
+      function slugifyNoYear(title) {
+        const t = translitRuToLat(title)
+          .replaceAll("«", "")
+          .replaceAll("»", "")
+          .replaceAll(/[“”\"']/g, "")
+          .replaceAll(/&/g, " and ")
+          .replaceAll(/[^a-z0-9]+/g, "-")
+          .replaceAll(/-+/g, "-")
+          .replaceAll(/^-|-$/g, "");
+        return t;
+      }
+
+      function stripExtAndSize(filename) {
+        const name = String(filename ?? "").trim();
+        const base = name.replace(/\.(jpg|jpeg|png|webp)$/i, "");
+        return base.replace(/-\d+x\d+$/i, "");
+      }
+
+      function tokens(s) {
+        return String(s ?? "")
+          .split("-")
+          .map((x) => x.trim())
+          .filter(Boolean);
+      }
+
+      function scoreMatch(slug, candidateBase) {
+        if (!slug || !candidateBase) return -1;
+        if (candidateBase === slug) return 10000;
+        if (candidateBase.startsWith(slug)) return 9000 - Math.min(2000, candidateBase.length - slug.length);
+        if (candidateBase.includes(slug)) return 8000 - Math.min(2000, candidateBase.length - slug.length);
+        const a = new Set(tokens(slug));
+        const b = new Set(tokens(candidateBase));
+        let inter = 0;
+        for (const t of a) if (b.has(t)) inter += 1;
+        return inter * 100 - Math.abs(a.size - b.size) * 10;
+      }
+
+      function extractYearToFiles(html) {
+        const lines = String(html ?? "").split(/\r?\n/);
+        const map = {};
+        for (const y of years) map[String(y)] = [];
+        let currentYear = null;
+
+        const reYear = /(Плакаты[^0-9]{0,40})(1941|1942|1943|1944|1945)([^0-9]{0,40}года)/i;
+        const reImg = /assets\/images\/([^\"'>]+\.(?:jpg|jpeg|png|webp))/gi;
+
+        for (const line of lines) {
+          const m = line.match(reYear);
+          if (m) currentYear = m[2];
+          if (!currentYear) continue;
+          let mm;
+          while ((mm = reImg.exec(line))) {
+            map[currentYear].push(mm[1]);
+          }
+        }
+
+        // уникализируем
+        for (const y of years) {
+          const yy = String(y);
+          map[yy] = Array.from(new Set(map[yy]));
+        }
+        return map;
+      }
+
+      function buildOverrides(html) {
+        const byYearFiles = extractYearToFiles(html);
+        const overrides = {};
+        const report = [];
+
+        for (const block of window.EXHIBIT_DATA ?? []) {
+          const y = String(block.year);
+          const files = byYearFiles[y] ?? [];
+          const bases = files.map((f) => ({ f, base: stripExtAndSize(f) }));
+
+          for (const it of block.items ?? []) {
+            const key = `${y}::${normalizeRu(it.title)}`;
+            const slug = slugifyNoYear(it.title);
+            let best = null;
+            let bestScore = -1;
+
+            for (const cand of bases) {
+              const sc = scoreMatch(slug, cand.base);
+              if (sc > bestScore) {
+                bestScore = sc;
+                best = cand.f;
+              }
+            }
+
+            if (best && bestScore >= 200) {
+              overrides[key] = best;
+              report.push({ year: y, title: it.title, file: best, score: bestScore });
+            } else {
+              report.push({ year: y, title: it.title, file: null, score: bestScore });
+            }
+          }
+        }
+        return { overrides, report, byYearFiles };
+      }
+
+      const els = {
+        fileInput: document.getElementById("fileInput"),
+        loadFileBtn: document.getElementById("loadFileBtn"),
+        htmlInput: document.getElementById("htmlInput"),
+        matchBtn: document.getElementById("matchBtn"),
+        importBtn: document.getElementById("importBtn"),
+        copyBtn: document.getElementById("copyBtn"),
+        status: document.getElementById("status"),
+        out: document.getElementById("out"),
+      };
+
+      let LAST = null;
+
+      function setStatus(html) {
+        els.status.innerHTML = html;
+      }
+
+      function renderJson(obj) {
+        els.out.textContent = JSON.stringify(obj ?? {}, null, 2);
+      }
+
+      function loadFromFile(file) {
+        return new Promise((resolve, reject) => {
+          try {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result ?? ""));
+            reader.onerror = () => reject(reader.error ?? new Error("Не удалось прочитать файл"));
+            reader.readAsText(file);
+          } catch (e) {
+            reject(e);
+          }
+        });
+      }
+
+      els.loadFileBtn.addEventListener("click", () => els.fileInput.click());
+      els.fileInput.addEventListener("change", async (e) => {
+        const file = e?.target?.files?.[0];
+        if (!file) return;
+        setStatus(`<span class="pill">Читаю файл: <b>${file.name}</b>…</span>`);
+        try {
+          const text = await loadFromFile(file);
+          els.htmlInput.value = text;
+          setStatus(`<span class="ok">Файл загружен: <b>${file.name}</b>. Теперь нажми “Сопоставить”.</span>`);
+        } catch {
+          setStatus(`<span class="bad">Не удалось прочитать файл. Попробуй другой формат (HTML/TXT).</span>`);
+        } finally {
+          // чтобы повторный выбор того же файла сработал
+          els.fileInput.value = "";
+        }
+      });
+
+      els.matchBtn.addEventListener("click", () => {
+        const html = els.htmlInput.value || "";
+        if (html.trim().length < 1000) {
+          setStatus(`<span class="bad">Похоже, HTML слишком короткий. Вставь “исходный код страницы” целиком.</span>`);
+          return;
+        }
+        const { overrides, report, byYearFiles } = buildOverrides(html);
+        LAST = { overrides, report, byYearFiles };
+
+        const total = report.length;
+        const ok = report.filter((r) => r.file).length;
+        const perYear = years
+          .map((y) => {
+            const yy = String(y);
+            const okY = report.filter((r) => r.year === yy && r.file).length;
+            const allY = report.filter((r) => r.year === yy).length;
+            const filesY = (byYearFiles?.[yy] ?? []).length;
+            return `<span class="pill">${yy}: <b>${okY}/${allY}</b>, файлов найдено: ${filesY}</span>`;
+          })
+          .join(" ");
+
+        setStatus(
+          `<span class="ok"><b>Готово!</b></span> Сопоставлено: <b>${ok}/${total}</b>. ${perYear}<br><span class="small">Если где-то не сопоставилось — это обычно значит, что на странице нет такого плаката или имя сильно отличается.</span>`
+        );
+        renderJson(overrides);
+        els.importBtn.disabled = ok === 0;
+        els.copyBtn.disabled = ok === 0;
+      });
+
+      els.importBtn.addEventListener("click", () => {
+        if (!LAST?.overrides) return;
+        try {
+          localStorage.setItem(LS_KEY, JSON.stringify(LAST.overrides));
+          setStatus(`<span class="ok"><b>Импортировано!</b></span> Открой выставку — картинки будут искаться по этим именам.`);
+          window.open("./index.html", "_self");
+        } catch {
+          setStatus(`<span class="bad">Не удалось сохранить в браузере (localStorage). Попробуй “Скопировать JSON”.</span>`);
+        }
+      });
+
+      els.copyBtn.addEventListener("click", () => {
+        const text = els.out.textContent || "";
+        if (!text.trim()) return;
+        try {
+          navigator.clipboard
+            .writeText(text)
+            .then(() => setStatus(`<span class="ok"><b>Скопировано!</b></span> Теперь можно отправить/сохранить JSON.`))
+            .catch(() => setStatus(`<span class="bad">Не получилось скопировать. Можно выделить текст вручную.</span>`));
+        } catch {
+          setStatus(`<span class="bad">Не получилось скопировать. Можно выделить текст вручную.</span>`);
+        }
+      });
+    </script>
+  </body>
+</html>
+

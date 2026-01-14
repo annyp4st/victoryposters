@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Виртуальная выставка: плакаты Великой Отечественной войны (1941–1945)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Виртуальная выставка плакатов ВОВ (1941–1945)</h1>
+        <p class="sub">
+          Добро пожаловать! Военные плакаты — это голос времени: они поддерживали, предупреждали, вдохновляли и помогали
+          людям держаться вместе в самые тяжёлые годы. Листая эту выставку, мы видим не просто рисунки — мы чувствуем
+          характер эпохи и нашу общую память, которой можно и нужно гордиться.
+        </p>
+      </header>
+
+      <section class="card controls">
+        <div class="row">
+          <label class="label" for="yearSelect">Год:</label>
+          <select id="yearSelect" class="input">
+            <option value="all">Все годы</option>
+            <option value="1941">1941</option>
+            <option value="1942">1942</option>
+            <option value="1943">1943</option>
+            <option value="1944">1944</option>
+            <option value="1945">1945</option>
+          </select>
+        </div>
+        <div class="row">
+          <label class="label" for="q">Поиск:</label>
+          <input id="q" class="input" type="text" placeholder="Например: Москва, партизаны, Корецкий…" />
+        </div>
+        <div class="row">
+          <button id="resetBtn" class="btn btnGhost" type="button">Сбросить</button>
+          <button id="addPosterBtn" class="btn btnGhost" type="button">Добавить плакат</button>
+        </div>
+        <div class="small">Показаны только те плакаты, для которых добавлена картинка.</div>
+      </section>
+
+      <section class="card">
+        <div class="row" style="justify-content: space-between; align-items: baseline">
+          <h2 style="margin: 0; font-size: 18px">Экспозиция</h2>
+          <div class="small" id="counter"></div>
+        </div>
+        <div id="grid" class="grid" aria-live="polite"></div>
+        <div class="row" style="justify-content: center; margin-top: 12px">
+          <button id="showMoreBtn" class="btn btnGhost" type="button">Показать ещё</button>
+        </div>
+      </section>
+
+      <footer class="footer"></footer>
+    </main>
+
+    <script src="./exhibit-data.js"></script>
+    <script src="./nlrs-manifest.js"></script>
+    <script src="./exhibit.js"></script>
+  </body>
+</html>
+

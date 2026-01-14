@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Выставка: служебный список файлов (для учителя/сборки)</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 12.5px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: rgba(0, 0, 0, 0.18);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        margin-top: 10px;
+      }
+      .copyRow {
+        justify-content: space-between;
+      }
+      .copyRow .btn {
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Служебное: список файлов (для учителя/сборки)</h1>
+        <p class="sub">
+          Картинки нужно класть в <code>assets/posters_by_year/</code>. Ниже — полный список ожидаемых имён файлов
+          (для каждого плаката).
+        </p>
+        <p class="small">
+          Назад к выставке: <a href="./index.html">открыть выставку</a>
+        </p>
+      </header>
+
+      <section class="card">
+        <div class="row copyRow">
+          <div class="small" id="hint"></div>
+          <button id="copyBtn" class="btn btnGhost" type="button">Скопировать весь список</button>
+        </div>
+        <div id="out" class="mono"></div>
+      </section>
+    </main>
+
+    <script src="./exhibit-data.js"></script>
+    <script>
+      /* global EXHIBIT_DATA */
+      function translitRuToLat(s) {
+        const map = {
+          а: "a",
+          б: "b",
+          в: "v",
+          г: "g",
+          д: "d",
+          е: "e",
+          ё: "e",
+          ж: "zh",
+          з: "z",
+          и: "i",
+          й: "y",
+          к: "k",
+          л: "l",
+          м: "m",
+          н: "n",
+          о: "o",
+          п: "p",
+          р: "r",
+          с: "s",
+          т: "t",
+          у: "u",
+          ф: "f",
+          х: "h",
+          ц: "ts",
+          ч: "ch",
+          ш: "sh",
+          щ: "sch",
+          ъ: "",
+          ы: "y",
+          ь: "",
+          э: "e",
+          ю: "yu",
+          я: "ya",
+        };
+        return String(s ?? "")
+          .toLowerCase()
+          .split("")
+          .map((ch) => (map[ch] != null ? map[ch] : ch))
+          .join("");
+      }
+
+      function slugifyTitle(title, year) {
+        const raw = `${title}-${year}`;
+        const t = translitRuToLat(raw)
+          .replaceAll("«", "")
+          .replaceAll("»", "")
+          .replaceAll(/[“”"']/g, "")
+          .replaceAll(/&/g, " and ")
+          .replaceAll(/[^a-z0-9]+/g, "-")
+          .replaceAll(/-+/g, "-")
+          .replaceAll(/^-|-$/g, "");
+        return t || String(year);
+      }
+
+      function buildList() {
+        const lines = [];
+        lines.push("Папка для картинок:");
+        lines.push("assets/posters_by_year/");
+        lines.push("");
+        for (const block of EXHIBIT_DATA ?? []) {
+          lines.push(`Плакаты ${block.year} г.`);
+          for (const it of block.items ?? []) {
+            const explicit = String(it.file ?? "").trim();
+            const name = explicit
+              ? (/\.(jpg|jpeg|png|webp)$/i.test(explicit) ? explicit : `${explicit}.jpg`)
+              : `${slugifyTitle(it.title, block.year)}.jpg`;
+            lines.push(`- ${name}  (можно .png/.webp) — ${it.author} — «${it.title}»`);
+          }
+          lines.push("");
+        }
+        return lines.join("\n").trim();
+      }
+
+      const out = document.getElementById("out");
+      const hint = document.getElementById("hint");
+      const copyBtn = document.getElementById("copyBtn");
+
+      const text = buildList();
+      out.textContent = text;
+      hint.textContent = `Всего строк: ${text.split("\n").length}`;
+
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          copyBtn.textContent = "Скопировано";
+          setTimeout(() => (copyBtn.textContent = "Скопировать весь список"), 1200);
+        } catch {
+          // если clipboard недоступен — просто выделим текст
+          const r = document.createRange();
+          r.selectNodeContents(out);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(r);
+        }
+      });
+    </script>
+  </body>
+</html>
+
