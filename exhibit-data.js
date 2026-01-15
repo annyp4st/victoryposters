@@ -115,6 +115,11 @@ window.EXHIBIT_DATA = [
         author: "А. А. Кокорекин",
         file: "svet-v-okne.jpg",
       },
+       {
+        title: "Тульское чаеБитие",
+        author: "Н. М. Лисогорский",
+        file: "tulskoe_chaebitye.jpg",
+      },
       { title: "Все для победы! Фронту от женщин СССР", author: "А. А. Кокорекин", file: "vse-dlya-pobedyi-frontu-ot-zhenshhin-sssr-637x850.jpg" },
       { title: "За Родину!", author: "А. А. Кокорекин", file: "za-rodinu1-528x850.jpg" },
       { title: "Воин Красной армии, спаси!", author: "В. Б. Корецкий", file: "voin-krasnoy-armii-spasi-606x850.jpg" },
@@ -195,4 +200,5 @@ window.EXHIBIT_DATA = [
     ],
   },
 ];
+
 
