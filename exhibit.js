@@ -362,7 +362,7 @@ function addPosterFlow() {
   const f = String(file).trim();
   if (!f) return;
 
-  USER_POSTERS = [...(USER_POSTERS ?? []), { year, title: t, author: a || "—", file: f }];
+  USER_POSTERS = [...(USER_POSTERS ?? []), { year, title: t, author: a || "-", file: f }];
   saveUserPosters(USER_POSTERS);
   ALL = flatten();
   visibleLimit = Math.max(visibleLimit, PAGE_SIZE);
@@ -385,4 +385,5 @@ showMoreBtn?.addEventListener("click", () => {
 });
 
 render();
+
 
