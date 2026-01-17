@@ -147,11 +147,9 @@ window.EXHIBIT_DATA = [
       },
       { title: "Союзники", author: "Б. Е. Ефимов" },
       { title: "Немецкий танк здесь не пройдет", author: "Н. Н. Жуков" },
-      { title: "Бей насмерть", author: "Н. Н. Жуков" },
       { title: "Ты вернул нам жизнь!", author: "В. С. Иванов", file: "tyi-vernul-nam-zhizn-595x850.jpg" },
       { title: "Очистим советскую землю от фашистской нечисти!", author: "В. С. Иванов", file: "ochistim-sovetskuyu-zemlyu-ot-fashistkoy-nechisti-566x850.jpg" },
       { title: "На Запад!", author: "В. С. Иванов", file: "na-zapad-563x850.jpg" },
-      { title: "Очистим нашу землю от гитлеровской нечисти", author: "В. С. Иванов" },
       { title: "Вся надежда на тебя, красный воин!", author: "В. С. Иванов, О. К. Бурова" },
       { title: "В этой фронтовой сводке есть и мой боевой труд!", author: "А. А. Кокорекин", file: "est-i-moi-boevoy-trud-1199x1750.jpg" },
       { title: "Боец, Родина ждет этого дня!", author: "В. Б. Корецкий" },
@@ -200,5 +198,6 @@ window.EXHIBIT_DATA = [
     ],
   },
 ];
+
 
 
