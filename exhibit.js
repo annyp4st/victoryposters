@@ -10,6 +10,7 @@ const addPosterBtn = document.getElementById("addPosterBtn");
 const gridEl = document.getElementById("grid");
 const counterEl = document.getElementById("counter");
 const showMoreBtn = document.getElementById("showMoreBtn");
+const tulaFilter = document.getElementById("tula-museum-filter");
 
 const LS_USER_KEY = "userPosters_v1";
 
@@ -20,39 +21,9 @@ let visibleLimit = PAGE_SIZE;
 
 function translitRuToLat(s) {
   const map = {
-    а: "a",
-    б: "b",
-    в: "v",
-    г: "g",
-    д: "d",
-    е: "e",
-    ё: "e",
-    ж: "zh",
-    з: "z",
-    и: "i",
-    й: "y",
-    к: "k",
-    л: "l",
-    м: "m",
-    н: "n",
-    о: "o",
-    п: "p",
-    р: "r",
-    с: "s",
-    т: "t",
-    у: "u",
-    ф: "f",
-    х: "h",
-    ц: "ts",
-    ч: "ch",
-    ш: "sh",
-    щ: "sch",
-    ъ: "",
-    ы: "y",
-    ь: "",
-    э: "e",
-    ю: "yu",
-    я: "ya",
+    а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "e", ж: "zh", з: "z", и: "i", й: "y",
+    к: "k", л: "l", м: "m", н: "n", о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f",
+    х: "h", ц: "ts", ч: "ch", ш: "sh", щ: "sch", ъ: "", ы: "y", ь: "", э: "e", ю: "yu", я: "ya"
   };
   return String(s ?? "")
     .toLowerCase()
@@ -64,8 +35,7 @@ function translitRuToLat(s) {
 function slugifyTitle(title, year) {
   const raw = `${title}-${year}`;
   const t = translitRuToLat(raw)
-    .replaceAll("«", "")
-    .replaceAll("»", "")
+    .replaceAll("«", "").replaceAll("»", "")
     .replaceAll(/[“”"']/g, "")
     .replaceAll(/&/g, " and ")
     .replaceAll(/[^a-z0-9]+/g, "-")
@@ -78,7 +48,7 @@ function normalizeForSearch(s) {
   return String(s ?? "")
     .toLowerCase()
     .replaceAll("ё", "е")
-    .replaceAll(/[«»“”"']/g, "")
+    .replaceAll(/[«»"']/g, "")
     .replaceAll(/[\s\u00A0]+/g, " ")
     .trim();
 }
@@ -88,8 +58,7 @@ function loadUserPosters() {
     const raw = localStorage.getItem(LS_USER_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed;
-    return [];
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
@@ -98,17 +67,14 @@ function loadUserPosters() {
 function saveUserPosters(list) {
   try {
     localStorage.setItem(LS_USER_KEY, JSON.stringify(Array.isArray(list) ? list : []));
-  } catch {
-    // ignore
-  }
+  } catch {}
 }
 
 let USER_POSTERS = loadUserPosters();
 
 function slugifyNoYear(title) {
   const t = translitRuToLat(title)
-    .replaceAll("«", "")
-    .replaceAll("»", "")
+    .replaceAll("«", "").replaceAll("»", "")
     .replaceAll(/[“”"']/g, "")
     .replaceAll(/&/g, " and ")
     .replaceAll(/[^a-z0-9]+/g, "-")
@@ -157,16 +123,13 @@ function pickFromNlrs(row) {
       best = f;
     }
   }
-  // Порог специально невысокий: если совпадение слабое, лучше упасть на стандартную схему.
   if (best && bestScore >= 200) return best;
   return "";
 }
 
 function candidatesExisting(row) {
   const candidates = buildCandidates(row);
-  // Для основной коллекции — ориентируемся на манифест (быстро и без “ошибок”).
   if (!row?.user) return candidates.filter((c) => FILE_SET.has(c));
-  // Для добавленных вручную — разрешаем любой указанный файл (если не загрузится, карточка просто исчезнет).
   return candidates;
 }
 
@@ -179,6 +142,7 @@ function flatten() {
         title: it.title,
         author: it.author,
         file: it.file,
+        museum: it.museum,
         user: false,
       });
     }
@@ -189,6 +153,7 @@ function flatten() {
       title: it.title,
       author: it.author,
       file: it.file,
+      museum: it.museum,
       user: true,
     });
   }
@@ -204,7 +169,6 @@ function buildCandidates(row) {
     return [`${explicit}.jpg`, `${explicit}.png`, `${explicit}.webp`];
   }
 
-  // Автоподбор по списку скачанных файлов (как на сайте НБ РС(Я))
   const nlrs = pickFromNlrs(row);
   if (nlrs) return [nlrs];
 
@@ -212,12 +176,13 @@ function buildCandidates(row) {
   return [`${slug}.jpg`, `${slug}.png`, `${slug}.webp`];
 }
 
-function matches(row, yearValue, q) {
+function matches(row, yearValue, q, tulaOnly) {
   if (yearValue !== "all" && String(row.year) !== String(yearValue)) return false;
+  if (tulaOnly && !row.museum) return false;
   if (!q) return true;
   const qq = normalizeForSearch(q);
   if (!qq) return true;
-  const hay = normalizeForSearch(`${row.title} ${row.author} ${row.year}`);
+  const hay = normalizeForSearch(`${row.title} ${row.author} ${row.year} ${row.museum || ""}`);
   return hay.includes(qq);
 }
 
@@ -231,14 +196,16 @@ function el(tag, className, text) {
 function render() {
   const yearValue = yearSelect?.value ?? "all";
   const q = qEl?.value ?? "";
+  const tulaOnly = tulaFilter?.checked ?? false;
 
-  const filtered = ALL.filter((r) => matches(r, yearValue, q)).filter((r) => candidatesExisting(r).length > 0);
+  const filtered = ALL.filter((r) => matches(r, yearValue, q, tulaOnly)).filter((r) => candidatesExisting(r).length > 0);
   const visible = filtered.slice(0, Math.max(0, visibleLimit));
 
   let shown = 0;
   if (counterEl) {
     const yearLabel = yearValue === "all" ? "все годы" : `год ${yearValue}`;
-    counterEl.textContent = `Показано: ${Math.min(filtered.length, visible.length)} из ${filtered.length} (${yearLabel})`;
+    const tulaLabel = tulaOnly ? " (только из музеев Тулы)" : "";
+    counterEl.textContent = `Показано: ${Math.min(filtered.length, visible.length)} из ${filtered.length} (${yearLabel}${tulaLabel})`;
   }
 
   gridEl.innerHTML = "";
@@ -255,32 +222,30 @@ function render() {
     img.decoding = "async";
 
     let tryIdx = 0;
-    let phase = 0; // 0 = small, 1 = full
+    let phase = 0;
     const setSrc = () => {
       const file = candidates[tryIdx];
       img.src = (phase === 0 ? BASE_SMALL : BASE) + file;
     };
     setSrc();
     img.onerror = () => {
-      // Сначала пробуем маленькую версию, затем оригинал.
       if (phase === 0) {
         phase = 1;
         setSrc();
         return;
       }
-      // Переходим к следующему кандидату и снова начинаем с small.
       phase = 0;
       tryIdx += 1;
       if (tryIdx < candidates.length) {
         setSrc();
         return;
       }
-      // По просьбе: если фото нет — просто скрываем карточку.
       card.remove();
       shown = Math.max(0, shown - 1);
       if (counterEl) {
         const yearLabel = yearValue === "all" ? "все годы" : `год ${yearValue}`;
-        counterEl.textContent = `Показано: ${shown} из ${filtered.length} (${yearLabel})`;
+        const tulaLabel = tulaOnly ? " (только из музеев Тулы)" : "";
+        counterEl.textContent = `Показано: ${shown} из ${filtered.length} (${yearLabel}${tulaLabel})`;
       }
     };
     imgWrap.appendChild(img);
@@ -288,6 +253,11 @@ function render() {
     const meta = el("div", "meta");
     meta.appendChild(el("div", "title", `«${row.title}»`));
     meta.appendChild(el("div", "author", `${row.author} — ${row.year}`));
+    
+    if (row.museum) {
+      meta.appendChild(el("div", "museum", `Музей: ${row.museum}`));
+    }
+    
     if (row.user) {
       const actions = el("div", "row");
       actions.style.marginTop = "10px";
@@ -315,10 +285,10 @@ function render() {
     shown += 1;
   }
 
-  // Если всё загрузилось без ошибок — счётчик уже верный.
   if (counterEl) {
     const yearLabel = yearValue === "all" ? "все годы" : `год ${yearValue}`;
-    counterEl.textContent = `Показано: ${shown} из ${filtered.length} (${yearLabel})`;
+    const tulaLabel = tulaOnly ? " (только из музеев Тулы)" : "";
+    counterEl.textContent = `Показано: ${shown} из ${filtered.length} (${yearLabel}${tulaLabel})`;
   }
 
   if (showMoreBtn) {
@@ -335,6 +305,7 @@ function render() {
 function resetControls() {
   if (yearSelect) yearSelect.value = "all";
   if (qEl) qEl.value = "";
+  if (tulaFilter) tulaFilter.checked = false;
   visibleLimit = PAGE_SIZE;
   render();
 }
@@ -362,7 +333,15 @@ function addPosterFlow() {
   const f = String(file).trim();
   if (!f) return;
 
-  USER_POSTERS = [...(USER_POSTERS ?? []), { year, title: t, author: a || "-", file: f }];
+  const museum = prompt("Название музея (если картина находится в музее Тулы, иначе оставьте пустым):", "");
+
+  USER_POSTERS = [...(USER_POSTERS ?? []), { 
+    year, 
+    title: t, 
+    author: a || "-", 
+    file: f,
+    museum: museum ? museum.trim() : undefined 
+  }];
   saveUserPosters(USER_POSTERS);
   ALL = flatten();
   visibleLimit = Math.max(visibleLimit, PAGE_SIZE);
@@ -373,17 +352,23 @@ function resetPaging() {
   visibleLimit = PAGE_SIZE;
 }
 
-yearSelect?.addEventListener("change", render);
-qEl?.addEventListener("input", render);
+yearSelect?.addEventListener("change", () => {
+  resetPaging();
+  render();
+});
+qEl?.addEventListener("input", () => {
+  resetPaging();
+  render();
+});
 resetBtn?.addEventListener("click", resetControls);
 addPosterBtn?.addEventListener("click", addPosterFlow);
-yearSelect?.addEventListener("change", resetPaging);
-qEl?.addEventListener("input", resetPaging);
+tulaFilter?.addEventListener("change", () => {
+  resetPaging();
+  render();
+});
 showMoreBtn?.addEventListener("click", () => {
   visibleLimit += PAGE_SIZE;
   render();
 });
 
 render();
-
-
