@@ -128,7 +128,7 @@ window.EXHIBIT_DATA = [
         file: "bolshe-hleba-frontu.jpg",
       },
       { title: "Гитлериада", author: "Кукрыниксы", museum: "Музей Порфирия Никитича Крылова", file: "kukr-gitleriada.jpg" },
-      { title: "Крыловская мартышка о Геббельсе", author: "Кукрыниксы", museum: "Музей Порфирия Никитича Крылова", file: "kukr-kmartyshka.jpg" };
+      { title: "Крыловская мартышка о Геббельсе", author: "Кукрыниксы", museum: "Музей Порфирия Никитича Крылова", file: "kukr-kmartyshka.jpg" },
       {
         title: "Свет в окне - помощь врагу!",
         author: "А. А. Кокорекин", museum: "Музей обороны Тулы",
@@ -222,6 +222,7 @@ window.EXHIBIT_DATA = [
     ],
   },
 ];
+
 
 
 
