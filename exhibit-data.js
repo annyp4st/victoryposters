@@ -31,6 +31,9 @@ window.EXHIBIT_DATA = [
         author: "А. Чечнев, Поленский",
         file: "hleb-nuzhen-kak.jpg",
       },
+      { title: "Против молодца – сам овца", author: "Кукрыниксы", file: "kukr-protiv-molodca.jpg" },
+      { title: "Два котла", author: "Кукрыниксы", file: "kukr-dva-kotla.jpg" },
+      { title: "Юный фриц", author: "Кукрыниксы", file: "kukr-yuny-fric.jpg" },
       {
         title: "Не есть фашистам советского хлеба!",
         author: "В. Свиненко, З. Л. Докторов",
@@ -109,6 +112,8 @@ window.EXHIBIT_DATA = [
         author: "И. Т. Колочков, М. Х. Кочнев, В. П. Федоров",
         file: "bolshe-hleba-frontu.jpg",
       },
+      { title: "Гитлериада", author: "Кукрыниксы", file: "kukr-gitleriada.jpg" },
+      { title: "Крыловская мартышка о Геббельсе", author: "Кукрыниксы", file: "kukr-kmartyshka.jpg" };
       {
         title: "Свет в окне - помощь врагу!",
         author: "А. А. Кокорекин",
@@ -145,6 +150,9 @@ window.EXHIBIT_DATA = [
         title: "Доблестные воины, крепче бейте врага! Вперед на запад, за полное освобождение советской земли!",
         author: "Л. Ф. Голованов",
       },
+      { title: "Расплата", author: "Кукрыниксы", file: "kukr-rasplata.jpg" },
+      { title: "За страну советскую, за веру немецкую", author: "Кукрыниксы", file: "kukr-za-stranu-sov.jpg" },
+      { title: "Убей его!", author: "Кукрыниксы", file: "kukr-ubey-ego.jpg" },
       { title: "Союзники", author: "Б. Е. Ефимов" },
       { title: "Немецкий танк здесь не пройдет", author: "Н. Н. Жуков" },
       { title: "Ты вернул нам жизнь!", author: "В. С. Иванов", file: "tyi-vernul-nam-zhizn-595x850.jpg" },
@@ -170,6 +178,7 @@ window.EXHIBIT_DATA = [
       { title: "Дойдем до Берлина!", author: "Л. Ф. Голованов", file: "doydem-do-berlina-588x850.jpg" },
       { title: "Узнал фашистский стервятник, что у нас – не ягнятник!", author: "В. Н. Дени", file: "uznal-fashistkiy-stervyatnik-chto-u-nas-ne-yagnyatnik-559x779.jpg" },
       { title: "Так будет с фашистским зверем!", author: "А. А. Кокорекин" },
+      { title: "Три года войны", author: "Кукрыниксы", file: "kukr-tri-goda-voyny.jpg" },
       { title: "Не спасутся фашисты – гады от снарядов нашей бригады!", author: "В. Б. Корецкий" },
       { title: "Европа будет свободной!", author: "В. Б. Корецкий" },
       {
@@ -198,6 +207,7 @@ window.EXHIBIT_DATA = [
     ],
   },
 ];
+
 
 
 
