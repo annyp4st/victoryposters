@@ -214,7 +214,7 @@ window.EXHIBIT_DATA = [
     year: 1945,
     items: [
       { title: "Красной армии – слава!", author: "Л. Ф. Голованов", file: "krasnoy-armii-slava-1184x1712.jpg" },
-      { title: "Красной армии метла нечисть вымела дотла!", author: "В. Н. Дени", museum: "Музей «Тульский пряник»", file: "krasnoy-armii-metla-nechist-vyimela-dotla-627x850.jpg" },
+      { title: "Красной армии метла нечисть вымела дотла!", author: "В. Н. Дени", museum: "Тульский государственный музей оружия", file: "krasnoy-armii-metla-nechist-vyimela-dotla-627x850.jpg" },
       { title: "Враг коварен – будь на – чеку!", author: "В. С. Иванов", file: "vrag-kovaren-bud-na-cheku-571x850.jpg" },
       { title: "Отстроим на славу!", author: "В. С. Иванов, О. К. Бурова", file: "otstroim-na-slavu-618x850.jpg" },
       { title: "Воину – победителю – всенародная любовь!", author: "А. А. Кокорекин", file: "voinu-pobeditelyu-vsenarodna-lyubov-603x850.jpg" },
@@ -222,6 +222,7 @@ window.EXHIBIT_DATA = [
     ],
   },
 ];
+
 
 
 
