@@ -252,7 +252,7 @@ function render() {
 
     const meta = el("div", "meta");
     meta.appendChild(el("div", "title", `«${row.title}»`));
-    meta.appendChild(el("div", "author", `${row.author} — ${row.year}`));
+    meta.appendChild(el("div", "author", `${row.author} - ${row.year}`));
     
     if (row.museum) {
       meta.appendChild(el("div", "museum", `Музей: ${row.museum}`));
@@ -372,3 +372,4 @@ showMoreBtn?.addEventListener("click", () => {
 });
 
 render();
+
