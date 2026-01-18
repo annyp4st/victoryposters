@@ -23,12 +23,12 @@ window.EXHIBIT_DATA = [
       },
       {
         title: "Железнодорожники, пропускайте без задержки на фронт воинские поезда!",
-        author: "Любимов",
+        author: "В.В. Любимов",
         file: "zheleznodorozhniki-propuskayte.jpg",
       },
       {
         title: "Хлеб нужен фронту как и оружие!",
-        author: "А. Чечнев, Поленский", museum: "Музей обороны Тулы",
+        author: "А.Н. Чечнев", museum: "Музей обороны Тулы",
         file: "hleb-nuzhen-kak.jpg",
       },
       { 
@@ -121,7 +121,7 @@ window.EXHIBIT_DATA = [
       { title: "Выступали – веселились, отступали – обслезились", author: "Б. Е. Ефимов, Н. А. Долгоруков", file: "yistupali-veselilis-otstupali-obslezilis-559x850.jpg" },
       { title: "Бей насмерть!", author: "Н. Н. Жуков", file: "bey-nasmert-654x814.jpg" },
       { title: "Вперед! На Запад!", author: "В. С. Иванов", file: "vpered-na-zapad-596x850.jpg" },
-      { title: "Бей, коли, гони!", author: "В. С. Иванов", museum: "Музей «Тульский пряник»" },
+      { title: "Бей, коли, гони, бери в полон!", author: "В. С. Иванов", museum: "Тульский военно-исторический музей" },
       {
         title: "Больше хлеба фронту!",
         author: "И. Т. Колочков, М. Х. Кочнев, В. П. Федоров", museum: "Музей обороны Тулы",
@@ -217,11 +217,12 @@ window.EXHIBIT_DATA = [
       { title: "Красной армии метла нечисть вымела дотла!", author: "В. Н. Дени", museum: "Тульский государственный музей оружия", file: "krasnoy-armii-metla-nechist-vyimela-dotla-627x850.jpg" },
       { title: "Враг коварен – будь на – чеку!", author: "В. С. Иванов", file: "vrag-kovaren-bud-na-cheku-571x850.jpg" },
       { title: "Отстроим на славу!", author: "В. С. Иванов, О. К. Бурова", file: "otstroim-na-slavu-618x850.jpg" },
-      { title: "Воину – победителю – всенародная любовь!", author: "А. А. Кокорекин", file: "voinu-pobeditelyu-vsenarodna-lyubov-603x850.jpg" },
+      { title: "Воину – победителю – всенародная любовь!", author: "А. А. Кокорекин", museum: "Музей "Тульский пряник"", file: "voinu-pobeditelyu-vsenarodna-lyubov-603x850.jpg" },
       { title: "Наше знамя – знамя победы!", author: "В. Б. Корецкий" },
     ],
   },
 ];
+
 
 
 
