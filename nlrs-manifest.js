@@ -58,6 +58,15 @@ window.NLRS_FILES = [
   "kazhdyy-udar-molota-udar-po-vragu-1941.jpgkazhdyy-udar-molota-udar-po-vragu-1941.jpg",
   "kleshhi-v-kleshhi-530x850.jpg",
   "komsomolets-bud-geroem-velikoy-otechestvennoy-voynyi-850x625.jpg",
+   "kukr-dva-kotla.jpg",
+  "kukr-gitleriada.jpg",
+  "kukr-kmartyshka.jpg",
+  "kukr-protiv-molodca.jpg",
+  "kukr-rasplata.jpg",
+  "kukr-tri-goda-voyny.jpg",
+  "kukr-ubey-ego.jpg",
+  "kukr-yuny-fric.jpg",
+  "kukr-za-stranu-sov.jpg",
   "krasnoy-armii-metla-nechist-vyimela-dotla-627x850.jpg",
   "krasnoy-armii-metla-nechist-vyimetet-do-tla-833x661.jpg",
   "krasnoy-armii-pobeditelnitse-chest-i-slava-601x850.jpg",
@@ -157,4 +166,5 @@ window.NLRS_FILES = [
   "zheleznodorozhniki-propuskayte.jpg",
   "zima-zamerzshie-fashistyi-gromilyi-v-sugrobah-pod-moskvoy-naydut-sebe-mogilyi-612x850.jpg",
 ];
+
 
