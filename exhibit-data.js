@@ -168,6 +168,7 @@ window.EXHIBIT_DATA = [
       { title: "Расплата", author: "Кукрыниксы", museum: "Музей Порфирия Никитича Крылова", file: "kukr-rasplata.jpg" },
       { title: "За страну советскую, за веру немецкую", author: "Кукрыниксы", museum: "Музей Порфирия Никитича Крылова", file: "kukr-za-stranu-sov.jpg" },
       { title: "Убей его!", author: "Кукрыниксы", museum: "Музей Порфирия Никитича Крылова", file: "kukr-ubey-ego.jpg" },
+       { title: "Новогоднее гадание", author: "Кукрыниксы", file: "1411639236-kukryniksy-12-640x726.jpg" },
       { title: "Союзники", author: "Б. Е. Ефимов" },
       { title: "Немецкий танк здесь не пройдет", author: "Н. Н. Жуков" },
       { title: "Ты вернул нам жизнь!", author: "В. С. Иванов", file: "tyi-vernul-nam-zhizn-595x850.jpg" },
@@ -219,6 +220,7 @@ window.EXHIBIT_DATA = [
     ],
   },
 ];
+
 
 
 
