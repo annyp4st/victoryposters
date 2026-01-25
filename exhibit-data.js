@@ -113,7 +113,7 @@ window.EXHIBIT_DATA = [
     year: 1942,
     items: [
       { title: "Нашим партизанам и партизанкам – слава!", author: "П. А. Алякринский" },
-      { title: "Окружим лаской и заботой детей, пострадавших от фашистских варваров", author: "Ф. В. Антонов" },
+
       { title: "Боец Красной армии! Ты не дашь любимую на позор и бесчестье гитлеровским солдатам", author: "Ф. В. Антонов", file: "boets-krasnoy-armii-tyi-ne-dash-lyubimuyu-na-pozor-i-beschestie-gitlerovskim-soldatam-648x850.jpg" },
       { title: "За честь жены, за жизнь детей", author: "Л. Ф. Голованов", file: "za-chest-zhenyi-za-chest-detey-za-schaste-rodinyi-svoey-608x850.jpg" },
       { title: "Сталинград!", author: "В. Н. Дени, Н. А. Долгоруков", file: "stalingrad-645x847.jpg" },
@@ -214,6 +214,7 @@ window.EXHIBIT_DATA = [
     year: 1945,
     items: [
       { title: "Красной армии – слава!", author: "Л. Ф. Голованов", file: "krasnoy-armii-slava-1184x1712.jpg" },
+      { title: "Окружим лаской и заботой детей, пострадавших от фашистских варваров", author: "Ф. В. Антонов" },
       { title: "Красной армии метла нечисть вымела дотла!", author: "В. Н. Дени", museum: "Тульский государственный музей оружия", file: "krasnoy-armii-metla-nechist-vyimela-dotla-627x850.jpg" },
       { title: "Враг коварен – будь на – чеку!", author: "В. С. Иванов", file: "vrag-kovaren-bud-na-cheku-571x850.jpg" },
       { title: "Отстроим на славу!", author: "В. С. Иванов, О. К. Бурова", file: "otstroim-na-slavu-618x850.jpg" },
@@ -222,6 +223,7 @@ window.EXHIBIT_DATA = [
     ],
   },
 ];
+
 
 
 
