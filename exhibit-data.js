@@ -205,6 +205,7 @@ window.EXHIBIT_DATA = [
       { title: "Дедовская слава", author: "Д. А. Шмаринов" },
       { title: "Чехи! Словаки! Поляки!", author: "Д. А. Шмаринов" },
       { title: "Разная картина - вид Москвы и вид Берлина!", author: "В. Н. Дени", file: "27-oktyabrya-559x850.jpg" },
+      { title: "Советская земля окончательно очищена от немецко-фашистских захватчиков!", author: "Н. М. Кочергин", file: "sovetskaya-zemlya-okonchatelno-ochishhena-ot-nemetsko-fashistskih-zahvatchikov-613x850.jpg" },
     ],
   },
   {
@@ -220,6 +221,7 @@ window.EXHIBIT_DATA = [
     ],
   },
 ];
+
 
 
 
