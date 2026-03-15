@@ -115,6 +115,7 @@ window.NLRS_FILES = [
   "slava-pobeditelyam-590x850.jpg",
   "slava-stalinskoy-gvardii-620x850.jpg",
   "slava-voinu-pobeditelyu-533x850.jpg",
+  "slava.jpg",
   "smert-nemetskim-okkupantam-603x850.jpg",
   "smert-nemetsko-fashistkim-zahvatchikam-595x850.jpg",
   "sovetskaya-zemlya-okonchatelno-ochishhena-ot-nemetsko-fashistskih-zahvatchikov-613x850.jpg",
