@@ -218,6 +218,7 @@ window.EXHIBIT_DATA = [
       { title: "Отстроим на славу!", author: "В. С. Иванов, О. К. Бурова", file: "otstroim-na-slavu-618x850.jpg" },
       { title: "Воину – победителю – всенародная любовь!", author: "А. А. Кокорекин", museum: "Музей Тульский пряник", file: "voinu-pobeditelyu-vsenarodna-lyubov-603x850.jpg" },
       { title: "Наше знамя – знамя победы!", author: "В. Б. Корецкий" },
+      { title: "Слава Красной Армии - освободительнице!", author: "Л.Ф. Голованов", file: "slava.jpg" },
     ],
   },
 ];
